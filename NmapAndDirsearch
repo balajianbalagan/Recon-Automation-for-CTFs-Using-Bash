@@ -1,11 +1,14 @@
 #!/bin/sh
 echo "Starting scan of $1"
-sudo nmap -sC -sV -T4 -PN -A $1 -oA ./startup.nmap
-httpportstatus = nmap -p 80 $1 | grep "open"
-if [ -z $httpportstatus ]
+sudo nmap -sC -sV -T4 -PN -A $1 -oA ./problem.nmap
+HSTATUS=$(nmap -p 80 $1 | grep "open" | cut -d " " -f2)
+echo $HSTATUS
+if [ -z $HSTATUS ]
 then 
         echo "port 80 is not open :("
 else
-        dirsearch -u http://$1 > ./directorylisting.txt
+        dirsearch -u http://$1 -o ./directorylisting.txt
 fi
+
+
 
